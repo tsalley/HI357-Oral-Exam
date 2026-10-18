@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: hi357-leadership-demo
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: node server.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: HI357_DEMO_ACCESS_CODE
+        sync: false
+      - key: HI357_INSTRUCTOR_ACCESS_CODE
+        sync: false
+      - key: HI357_MAX_TOKENS
+        value: '35'
+      - key: HI357_MAX_GRADES
+        value: '45'

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HI357 · Instructor Dashboard</title>
+  <style>
+    :root { color-scheme: light; font-family: Aptos, Inter, 'Segoe UI', Arial, sans-serif; background: #f4f6fa; color: #15253d; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    header { background: #152a45; color: white; padding: 22px max(24px, calc((100vw - 1300px) / 2)); }
+    .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 11px; opacity: .72; font-weight: 700; }
+    header h1 { font-size: 25px; margin: 5px 0 4px; font-weight: 700; }
+    header p { margin: 0; opacity: .8; font-size: 13px; }
+    header a { color: #d2e7ff; }
+    .notice { background: #fff7e7; border-bottom: 1px solid #f0d59c; color: #695024; padding: 12px 24px; font-size: 13px; text-align: center; }
+    main { max-width: 1320px; margin: auto; padding: 24px 22px 60px; }
+    .toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .toolbar h2 { margin: 0; font-size: 20px; }
+    .toolbar small { display: block; margin-top: 5px; color: #60718a; }
+    button, input, textarea { font: inherit; }
+    button { border: 1px solid #b9c8da; background: #fff; color: #243a58; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-size: 13px; font-weight: 650; }
+    button:hover { border-color: #526d8e; background: #f0f6fc; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    button.primary { background: #205184; border-color: #205184; color: #fff; }
+    button.primary:hover { background: #173f6b; }
+    .button-group { display: flex; gap: 8px; }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat { border: 1px solid #dbe2ec; border-radius: 12px; background: white; padding: 19px; }
+    .stat .label { font-size: 12px; color: #67788d; }
+    .stat strong { display: block; font-size: 29px; margin-top: 4px; }
+    .workspace { display: grid; grid-template-columns: minmax(300px, 44%) minmax(380px, 56%); gap: 18px; align-items: start; }
+    .panel { background: #fff; border: 1px solid #dbe2ec; border-radius: 12px; overflow: hidden; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; padding: 18px; border-bottom: 1px solid #e6eaf1; gap: 12px; }
+    .panel-head h3 { font-size: 16px; margin: 0; }
+    .panel-head p { font-size: 12px; margin: 5px 0 0; color: #64758d; }
+    .search { padding: 11px 13px; width: 100%; min-width: 160px; border: 1px solid #ccd6e2; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { text-align: left; color: #617187; font-size: 11px; background: #f7f9fc; font-weight: 700; padding: 11px 12px; }
+    td { padding: 13px 12px; border-top: 1px solid #edf0f5; vertical-align: middle; }
+    tr[data-id] { cursor: pointer; }
+    tr[data-id]:hover { background: #f3f7fc; }
+    tr.active { background: #e9f2ff; }
+    .pill { display: inline-block; padding: 5px 8px; border-radius: 20px; background: #f0f3f7; color: #596d84; font-size: 11px; white-space: nowrap; }
+    .pill.done { background: #e7f4ec; color: #245b3f; }
+    .muted { color: #64758a; }
+    .detail { padding: 18px; }
+    .empty { padding: 38px 24px; text-align: center; color: #67788d; }
+    .detail-title { display: flex; justify-content: space-between; gap: 15px; align-items: baseline; margin-bottom: 14px; }
+    .detail-title strong { font-size: 17px; }
+    .label { display: block; font-size: 12px; color: #62748b; margin-bottom: 6px; }
+    .review-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { min-width: 0; }
+    .field input, textarea { width: 100%; border: 1px solid #cbd6e1; border-radius: 8px; padding: 10px 12px; background: #fff; }
+    .field input:focus, textarea:focus { outline: 2px solid #8cafd2; }
+    .span-two { grid-column: 1/-1; }
+    textarea { min-height: 92px; resize: vertical; }
+    hr { border: 0; border-top: 1px solid #e9edf3; margin: 18px 0; }
+    .report { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .score-block { padding: 14px; background: #f5f8fc; border-radius: 9px; }
+    .score-block strong { font-size: 25px; display:block; }
+    .score-block small { color: #62748b; }
+    .rubric { display: grid; grid-template-columns: 1fr auto; row-gap: 9px; font-size: 13px; }
+    .rubric strong { text-align: right; }
+    details { margin-top: 12px; background: #f7f9fc; border-radius: 7px; padding: 11px 13px; }
+    summary { font-size: 13px; font-weight: 700; cursor: pointer; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.55 ui-monospace, Consolas, monospace; max-height: 380px; overflow: auto; padding: 14px; background: #f7f9fc; border: 1px solid #e3eaf4; border-radius: 8px; }
+    audio { width: 100%; margin-top: 8px; }
+    .flash { min-height: 20px; font-size: 13px; margin: 10px 0; color: #205184; }
+    @media (max-width: 980px) { .workspace { grid-template-columns: 1fr; } }
+    @media (max-width: 570px) { .stats { grid-template-columns: 1fr 1fr 1fr; } .stat { padding: 12px; } .stat strong { font-size: 23px; } .report { grid-template-columns: 1fr; } .review-form { grid-template-columns: 1fr; } .span-two { grid-column: auto; } }
+  </style>
+</head>
+<body><form method="post" action="/auth/logout" style="text-align:right;margin:10px 20px 0"><button type="submit" style="padding:8px 14px;border-radius:8px;border:1px solid #9fb0c0;background:white;cursor:pointer">Sign out</button></form>
+  <header><div class="eyebrow">HI357 · Armed Conflict in the Cold War</div><h1>Instructor Dashboard</h1><p>Temporary demo · Exam review and AI-suggested assessment · <a href="/">Open oral exam</a></p></header>
+  <div class="notice"><strong>LOCAL TESTING ONLY:</strong> No authentication or approved student-data protection. Use fictional IDs. AI scores are recommendations, never official grades.</div>
+  <main>
+    <section class="toolbar"><div><h2>Examination records</h2><small>Saved on this computer under hi357_local_data. New exams appear after they end.</small></div><div class="button-group"><button id="refresh">Refresh</button><button class="primary" id="export">Export class Excel</button></div></section>
+    <section class="stats"><div class="stat"><span class="label">Saved examinations</span><strong id="count">0</strong></div><div class="stat"><span class="label">Awaiting review</span><strong id="pending">0</strong></div><div class="stat"><span class="label">Instructor graded</span><strong id="graded">0</strong></div></section>
+    <div class="workspace">
+      <section class="panel"><div class="panel-head"><div><h3>Exams</h3><p>Select a record to review</p></div><input class="search" id="search" placeholder="Find practice ID or section" aria-label="Search exams" /></div><div style="overflow-x:auto"><table><thead><tr><th>Identifier</th><th>Completed</th><th>AI</th><th>Final</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div><div id="noRows" class="empty" hidden>No matching exams yet. Complete a practice oral exam to create a record.</div></section>
+      <section class="panel"><div class="panel-head"><div><h3>Instructor review</h3><p>Final scores and notes remain editable</p></div><button id="downloadTranscript" disabled>Download transcript</button></div><div id="blank" class="empty">Select an exam on the left to open its transcript, audio and grading report.</div><div class="detail" id="detail" hidden>
+        <div class="detail-title"><strong id="detailId"></strong><span id="statusPill" class="pill"></span></div>
+        <div class="report"><div class="score-block"><span class="label">AI suggested · not official</span><strong id="aiScore">—</strong><small>Out of 100</small></div><div class="score-block"><span class="label">Instructor final</span><strong id="finalScore">—</strong><small>Out of 100</small></div></div>
+        <hr/><div class="rubric" id="rubric"></div><details><summary>AI assessment and review cautions</summary><div id="assessment" style="white-space:pre-wrap;font-size:12px;line-height:1.55;margin-top:10px"></div><button id="retryGrade" style="margin-top:12px">Generate / retry suggested grade</button></details>
+        <hr/><div><strong>Recording</strong><div id="noAudio" class="muted" style="font-size:12px;margin-top:8px">Recording unavailable. Use your separately downloaded audio file.</div><audio id="audioPlayer" controls preload="none" hidden></audio></div>
+        <hr/><div><strong>Transcript</strong><p class="muted" style="font-size:12px">AI-generated text; verify uncertain passages against audio.</p><pre id="transcript"></pre></div>
+        <hr/><form id="reviewForm" class="review-form"><div class="field"><label class="label" for="cadetId">Practice identifier</label><input id="cadetId" maxlength="80" /></div><div class="field"><label class="label" for="section">Section</label><input id="section" maxlength="40" /></div><div class="field"><label class="label" for="finalGrade">Instructor final grade (0–100)</label><input id="finalGrade" type="number" min="0" max="100" step="1" placeholder="Leave blank until reviewed" /></div><div class="field" style="align-self:end"><button type="submit" class="primary" style="width:100%">Save instructor review</button></div><div class="field span-two"><label class="label" for="notes">Instructor notes</label><textarea id="notes" maxlength="5000"></textarea></div></form>
+      </div></section>
+    </div><div id="flash" role="status" class="flash"></div>
+  </main>
+<script>
+  const $ = (id) => document.getElementById(id);
+  let exams = []; let selected = null;
+  function flash(message) { $('flash').textContent = message; }
+  async function api(url, options) {
+    const response = await fetch(url, options);
+    if (!response.ok) { let detail; try { detail = (await response.json()).error; } catch {} throw Error(detail || `HTTP ${response.status}`); }
+    return response;
+  }
+  function showDate(value) { const d = new Date(value); return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString([], { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }); }
+  function makeCell(row, value) { const cell = document.createElement('td'); cell.textContent = value === null || value === undefined ? '—' : String(value); row.appendChild(cell); return cell; }
+  function rows() {
+    const term = $('search').value.trim().toLowerCase(); $('rows').replaceChildren();
+    const filtered = exams.filter(x => `${x.cadetId || ''} ${x.section || ''} ${x.examId}`.toLowerCase().includes(term));
+    $('noRows').hidden = filtered.length > 0;
+    for (const exam of filtered) {
+      const tr = document.createElement('tr'); tr.dataset.id = exam.examId;
+      if (selected?.examId === exam.examId) tr.className = 'active';
+      makeCell(tr, exam.cadetId || 'PRACTICE'); makeCell(tr, showDate(exam.date));
+      makeCell(tr, exam.aiTotal); makeCell(tr, exam.instructorFinal);
+      const state = makeCell(tr, exam.reviewedAt ? 'Reviewed' : 'Pending');
+      const pill = document.createElement('span'); pill.className = exam.reviewedAt ? 'pill done' : 'pill'; pill.textContent = state.textContent;
+      state.replaceChildren(pill); tr.addEventListener('click', () => openExam(exam.examId)); $('rows').appendChild(tr);
+    }
+  }
+  async function refresh() {
+    try {
+      exams = (await (await api('/api/exams')).json()).exams;
+      $('count').textContent = exams.length;
+      $('pending').textContent = exams.filter(x => !x.reviewedAt).length;
+      $('graded').textContent = exams.filter(x => x.reviewedAt).length;
+      rows(); flash('Dashboard records refreshed.');
+    } catch (error) { flash(`Could not load exams: ${error.message}`); }
+  }
+  function setText(id, value) { $(id).textContent = value ?? ''; }
+  async function openExam(id) {
+    try {
+      selected = await (await api(`/api/exams/${encodeURIComponent(id)}`)).json();
+      $('blank').hidden = true; $('detail').hidden = false; $('downloadTranscript').disabled = false;
+      setText('detailId', `${selected.cadetId || 'PRACTICE'} · ${showDate(selected.date)}`);
+      const reviewed = selected.instructorFinal !== null && selected.instructorFinal !== undefined;
+      const pill = $('statusPill'); pill.textContent = reviewed ? 'Instructor reviewed' : 'Awaiting instructor review'; pill.className = reviewed ? 'pill done' : 'pill';
+      setText('aiScore', selected.grade?.status === 'graded' ? `${selected.grade.recommendedTotal}` : '—');
+      setText('finalScore', reviewed ? selected.instructorFinal : '—');
+      const rubric = $('rubric'); rubric.replaceChildren();
+      const categories = [ ['knowledge','Historical knowledge',30], ['reasoning','Historical reasoning',25], ['evidence','Historical evidence',20], ['synthesis','Connections & synthesis',15], ['probing','Probing questions',10] ];
+      for (const [key,label,max] of categories) {
+        const name = document.createElement('span'); name.textContent = label;
+        const score = document.createElement('strong'); score.textContent = selected.grade?.categories?.[key] ? `${selected.grade.categories[key].score}/${max}` : `—/${max}`;
+        rubric.append(name, score);
+      }
+      const grade = selected.grade;
+      const assessment = grade?.status === 'graded'
+        ? [grade.overallAssessment, '', ...categories.map(([key, label]) => `${label}: ${grade.categories?.[key]?.rationale || ''}\nCadet evidence: ${grade.categories?.[key]?.cadetEvidence || 'Unavailable'}`),
+           '', 'Strengths:', ...(grade.strengths || []).map(x => `• ${x}`), '', 'For instructor review:', ...(grade.areasForReview || []).map(x => `• ${x}`),
+           '', 'Transcript cautions:', ...(grade.transcriptCautions || []).map(x => `• ${x}`)].join('\n')
+        : `No AI-suggested grade stored. ${selected.gradeNote || ''}`;
+      setText('assessment', assessment);
+      setText('transcript', selected.transcript || '[No transcript available]');
+      $('cadetId').value = selected.cadetId || ''; $('section').value = selected.section || '';
+      $('finalGrade').value = reviewed ? String(selected.instructorFinal) : '';
+      $('notes').value = selected.instructorNotes || '';
+      $('noAudio').hidden = !!selected.audioAvailable; $('audioPlayer').hidden = !selected.audioAvailable;
+      $('audioPlayer').pause(); $('audioPlayer').removeAttribute('src');
+      if (selected.audioAvailable) $('audioPlayer').src = `/api/exams/${encodeURIComponent(selected.examId)}/audio`;
+      rows(); flash('Opened examination. AI recommendation is not an official grade.');
+    } catch (error) { flash(`Could not open exam: ${error.message}`); }
+  }
+  $('reviewForm').addEventListener('submit', async (event) => {
+    event.preventDefault(); if (!selected) return;
+    const raw = $('finalGrade').value.trim(); const final = raw === '' ? null : Number(raw);
+    if (final !== null && (!Number.isInteger(final) || final < 0 || final > 100)) { flash('Final grade must be a whole number from 0 to 100.'); return; }
+    try {
+      await api(`/api/exams/${encodeURIComponent(selected.examId)}/review`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ instructorFinal: final, instructorNotes: $('notes').value, cadetId: $('cadetId').value, section: $('section').value }),
+      });
+      await refresh(); await openExam(selected.examId); flash('Instructor review saved temporarily; export before service sleep/restart.');
+    } catch (error) { flash(`Review save failed: ${error.message}`); }
+  });
+  $('downloadTranscript').addEventListener('click', () => {
+    if (!selected) return;
+    const blob = new Blob([selected.transcript], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob);
+    const link = document.createElement('a'); link.href = url; link.download = selected.transcriptFile || `${selected.examId}.txt`;
+    document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+  });
+  $('retryGrade').addEventListener('click', async () => {
+    if (!selected) return;
+    const id = selected.examId; $('retryGrade').disabled = true; flash('Requesting independent AI-suggested grade...');
+    try {
+      const result = await (await api('/grade', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({transcript:selected.transcript.split('\n============================================================\nAI-SUGGESTED GRADE')[0]}) })).json();
+      if (result.status !== 'graded') throw Error(result.reason || 'Insufficient evidence for grading');
+      await api('/api/exams', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({
+        ...selected, grade: result, gradeNote: 'Generated for instructor review.'
+      }) });
+      await refresh(); await openExam(id); flash('New suggested grade saved. Instructor final grade has not been changed.');
+    } catch (error) { flash(`Suggested grading unsuccessful: ${error.message}`); }
+    finally { $('retryGrade').disabled = false; }
+  });
+  $('export').addEventListener('click', async () => {
+    if (!exams.length) { flash('Complete a practice exam before exporting a workbook.'); return; }
+    $('export').disabled = true; flash('Creating class Excel workbook...');
+    try {
+      const detailed = await Promise.all(exams.slice(0, 250).map(async x => { const response = await api(`/api/exams/${encodeURIComponent(x.examId)}`); return response.json(); }));
+      const exportRows = detailed.map(x => ({
+        examId: x.examId, cadetId:x.cadetId, section:x.section, date:x.date,
+        grade:x.grade, instructorFinal:x.instructorFinal,
+        status:x.instructorFinal === null || x.instructorFinal === undefined ? 'Pending instructor review' : 'Reviewed by instructor',
+        notes:x.instructorNotes || '', transcriptFile:x.transcriptFile, audioFile:x.audioFile,
+      }));
+      const blob = await (await api('/export-gradebook', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({exams:exportRows}) })).blob();
+      const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href=url; link.download='HI357_class_gradebook.xlsx';
+      document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+      flash(`Exported ${exportRows.length} examination records. Final grades remain instructor-controlled.`);
+    } catch (error) { flash(`Excel export failed: ${error.message}`); }
+    finally { $('export').disabled = false; }
+  });
+  $('refresh').addEventListener('click', refresh);
+  $('search').addEventListener('input', rows);
+  refresh();
+</script>
+</body>
+</html>
