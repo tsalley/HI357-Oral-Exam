@@ -264,7 +264,7 @@ type SuggestedGrade = {
   areasForReview: string[]
   transcriptCautions: string[]
 }
-type UnassessableResult = { status: 'insufficient_evidence'; reason: string }
+
 let suggestedGrade: SuggestedGrade | null = null
 let suggestedGradeNote = 'Not yet requested.'
 
