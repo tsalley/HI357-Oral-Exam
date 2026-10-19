@@ -101,7 +101,7 @@ function loginPage(role, error = '') {
     ? 'Enter the private instructor code. It must not be distributed with the invitation.'
     : 'Enter the demonstration invitation code supplied by the project coordinator.';
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HI357 — ${title}</title>
-<style>body{font:16px system-ui,Arial;background:#f2f5f8;color:#172e42;margin:0;padding:3rem 1rem}main{max-width:450px;background:white;border:1px solid #d9e0e6;border-radius:16px;padding:2rem;margin:auto;box-shadow:0 8px 30px #18344b18}h1{font-size:1.4rem}label{display:block;margin:1.4rem 0 .5rem;font-weight:650}input{width:100%;padding:13px;box-sizing:border-box;border:1px solid #9aabb9;border-radius:9px;font-size:1rem}button{background:#173f5f;color:white;border:0;border-radius:9px;padding:12px 20px;margin-top:1rem;cursor:pointer;font-size:1rem}small{color:#526b7e;display:block;margin-top:1.3rem;line-height:1.6}.err{color:#a32222;font-weight:600}</style></head><body><main><div style="font-weight:bold;letter-spacing:1px;font-size:.8rem">HI357 · RESEARCH DEMONSTRATION</div><h1>${title}</h1><p>${description}</p>${error ? '<p class="err">Incorrect code or too many attempts. Please try again later.</p>' : ''}<form method="post" action="/auth/login"><input type="hidden" name="role" value="${role}"><label for="code">Access code</label><input type="password" id="code" name="code" autocomplete="off" required autofocus><button type="submit">Enter demonstration</button></form><small>Not approved for real cadet grades or records. Hosted recordings are temporary and may be lost if the service restarts.</small></main></body></html>`;
+<style>:root{font-family:'Times New Roman',Times,Georgia,serif;color-scheme:light}*{box-sizing:border-box}body{font:18px/1.5 'Times New Roman',Times,Georgia,serif;background:#F3F0E5;color:#252A25;margin:0;padding:4rem 1rem}main{max-width:460px;background:#FFFDF8;border:1px solid #D8D7C8;border-top:5px solid #C3A46B;border-radius:12px;padding:2.2rem;margin:auto;box-shadow:0 9px 28px #304B351C}h1{font-size:1.6rem;color:#304B35;margin:.65rem 0}label{display:block;margin:1.4rem 0 .5rem;font-weight:700}input{width:100%;padding:13px;border:1px solid #A5B5A5;border-radius:7px;font:inherit;background:#FFFDF8;color:#252A25}input:focus-visible,button:focus-visible{outline:3px solid #C3A46B;outline-offset:2px}button{background:#304B35;color:#FFFDF8;border:0;border-radius:7px;padding:12px 20px;margin-top:1rem;cursor:pointer;font:inherit;font-weight:700}button:hover{background:#223A29}small{color:#52604F;display:block;margin-top:1.3rem;line-height:1.6}.err{color:#873B31;font-weight:700}</style></head><body><main><div style="font-weight:bold;letter-spacing:1px;font-size:.8rem">HI357 · RESEARCH DEMONSTRATION</div><h1>${title}</h1><p>${description}</p>${error ? '<p class="err">Incorrect code or too many attempts. Please try again later.</p>' : ''}<form method="post" action="/auth/login"><input type="hidden" name="role" value="${role}"><label for="code">Access code</label><input type="password" id="code" name="code" autocomplete="off" required autofocus><button type="submit">Enter demonstration</button></form><small>Not approved for real cadet grades or records. Hosted recordings are temporary and may be lost if the service restarts.</small></main></body></html>`;
 }
 app.post('/auth/login', (req, res) => {
   const role = req.body?.role === 'instructor' ? 'instructor' : 'participant';
@@ -630,11 +630,11 @@ app.post('/export-gradebook', requireAccess('instructor'), async (req, res) => {
     worksheet.autoFilter = { from: 'A1', to: `P${worksheet.rowCount}` };
     const header = worksheet.getRow(1);
     header.height = 32;
-    header.font = { bold: true, color: { argb: 'FFFFFFFF' } };
-    header.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF19324B' } };
+    header.font = { name: 'Times New Roman', bold: true, color: { argb: 'FFFFFFFF' } };
+    header.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF304B35' } };
     header.alignment = { wrapText: true, vertical: 'middle' };
     worksheet.getColumn('K').eachCell({ includeEmpty: true }, cell => {
-      if (cell.row > 1) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF2CC' } };
+      if (cell.row > 1) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8F1DF' } };
     });
     worksheet.getColumn('J').numFmt = '0';
     worksheet.getColumn('K').numFmt = '0';
@@ -658,9 +658,9 @@ app.post('/export-gradebook', requireAccess('instructor'), async (req, res) => {
     guide.addRow(['Instructor Final Grade is the instructor-editable field (yellow column).']);
     guide.addRow(['This workbook does not store the transcript or audio; filenames provide cross-references.']);
     guide.addRow(['Only use with institutionally authorized storage and access for real cadet records.']);
-    guide.getRow(1).font = { bold: true, size: 15 };
-    guide.getRow(4).font = { bold: true };
-    guide.getRow(4).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCEAF3' } };
+    guide.getRow(1).font = { name: 'Times New Roman', bold: true, size: 15 };
+    guide.getRow(4).font = { name: 'Times New Roman', bold: true };
+    guide.getRow(4).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3ECDD' } };
 
     const xlsx = await workbook.xlsx.writeBuffer();
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
